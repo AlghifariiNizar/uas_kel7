@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:uas_kel7/routes/route_names.dart';
 import '../models/article_model.dart';
 import '../data/article_data.dart';
+import '../services/favorite_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,27 +16,45 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<String> favoriteArticleIds = [];
+  // List<String> favoriteArticleIds = [];
   int _currentIndex = 0; // Untuk BottomNavigationBar
+  final FavoriteService _favoriteService = FavoriteService();
+
+  @override
+  void initState() {
+    super.initState();
+    _favoriteService.addListener(_onFavoritesChanged);
+  }
+
+  @override
+  void dispose() {
+    _favoriteService.removeListener(_onFavoritesChanged);
+    super.dispose();
+  }
+
+  void _onFavoritesChanged() {
+    if (mounted) {
+      setState(() {
+      });
+    }
+  }
+
 
   void _toggleFavorite(String articleId) {
-    setState(() {
-      if (favoriteArticleIds.contains(articleId)) {
-        favoriteArticleIds.remove(articleId);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Artikel dihapus dari favorit'), duration: Duration(seconds: 1)),
-        );
-      } else {
-        favoriteArticleIds.add(articleId);
+    _favoriteService.toggleFavorite(articleId); 
+    if (_favoriteService.isFavorite(articleId)) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Artikel ditambahkan ke favorit'), duration: Duration(seconds: 1)),
         );
-      }
-    });
+    } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Artikel dihapus dari favorit'), duration: Duration(seconds: 1)),
+        );
+    }
   }
 
   bool _isFavorite(String articleId) {
-    return favoriteArticleIds.contains(articleId);
+    return _favoriteService.isFavorite(articleId);
   }
 
   void _onBottomNavTapped(int index) {
@@ -81,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 width: 80.w,
                 height: 40.h,
                 decoration: BoxDecoration(
-                  color: Colors.deepPurple,
+                  color: const Color.fromARGB(255, 47, 12, 243),
                   borderRadius: BorderRadius.circular(8.r),
                 ),
                 child: Center(
@@ -141,7 +160,7 @@ class _HomeScreenState extends State<HomeScreen> {
         currentIndex: _currentIndex,
         onTap: _onBottomNavTapped,
         type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.deepPurple,
+        selectedItemColor: const Color.fromARGB(255, 47, 12, 243),
         unselectedItemColor: Colors.grey, 
         selectedFontSize: 12.sp,
         unselectedFontSize: 12.sp,
@@ -236,7 +255,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     IconButton(
                       icon: Icon(
                         _isFavorite(article.id) ? Icons.bookmark : Icons.bookmark_border,
-                        color: _isFavorite(article.id) ? Colors.deepPurple : Colors.grey,
+                        color: _isFavorite(article.id) ? const Color.fromARGB(255, 47, 12, 243) : Colors.grey,
                         size: 16.sp,
                       ),
                       onPressed: () => _toggleFavorite(article.id),
@@ -326,8 +345,8 @@ class _HomeScreenState extends State<HomeScreen> {
               IconButton(
                 icon: Icon(
                   _isFavorite(article.id) ? Icons.bookmark : Icons.bookmark_border,
-                  color: _isFavorite(article.id) ? Colors.deepPurple : Colors.grey,
-                  size: 22.sp,
+                  color: _isFavorite(article.id) ? const Color.fromARGB(255, 47, 12, 243) : Colors.grey,
+                  size: 16.sp,
                 ),
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),

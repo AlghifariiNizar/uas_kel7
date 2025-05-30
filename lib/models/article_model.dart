@@ -4,7 +4,7 @@ class Article{
   final String snippet;
   final String imageUrl;
   final String date;
-  bool isFavorite;
+  // bool isFavorite;
 
   Article({
     required this.id,
@@ -12,6 +12,6 @@ class Article{
     required this.snippet,
     required this.imageUrl,
     required this.date,
-    this.isFavorite = false,
+    // this.isFavorite = false,
   });
 }

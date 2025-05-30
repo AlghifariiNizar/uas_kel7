@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:uas_kel7/views/explore_screen.dart';
+import 'package:uas_kel7/views/favorite_screen.dart';
 import 'package:uas_kel7/views/splash_screen.dart';
 import 'package:uas_kel7/views/home_screen.dart';
 import 'route_names.dart';
@@ -56,10 +57,8 @@ class AppRoute {
         GoRoute(
           path: '/favorites',
           name: RouteNames.favorites,
-          // Sementara
           pageBuilder:
-              (context, state) =>
-                  _dummyPage(context, state, 'Favorites Screen'),
+              (context, state) => MaterialPage(child: FavoritesScreen()),
         ),
         // GoRoute(
         //   path: '/profile',
