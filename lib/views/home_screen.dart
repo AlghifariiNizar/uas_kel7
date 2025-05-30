@@ -87,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Center(
                   child: Text(
                     'Logo',
-                    style: TextStyle(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.bold),
+                    style: TextStyle(color: Colors.white, fontSize: 10.sp, fontWeight: FontWeight.normal),
                   ),
                 ),
               ),
@@ -106,11 +106,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.search, color: Colors.grey[600], size: 20.sp),
+                        Icon(Icons.search, color: Colors.grey[600], size: 16.sp),
                         SizedBox(width: 8.w),
                         Text(
                           'Search..',
-                          style: TextStyle(color: Colors.grey[600], fontSize: 14.sp),
+                          style: TextStyle(color: Colors.grey[600], fontSize: 10.sp),
                         ),
                       ],
                     ),
@@ -152,13 +152,13 @@ class _HomeScreenState extends State<HomeScreen> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.explore_outlined),
-            activeIcon: Icon(Icons.explore),
+            icon: Icon(Icons.search_outlined),
+            activeIcon: Icon(Icons.search),
             label: 'Explore',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.favorite_border),
-            activeIcon: Icon(Icons.favorite),
+            icon: Icon(Icons.bookmark_outline),
+            activeIcon: Icon(Icons.bookmark),
             label: 'Favorite',
           ),
           BottomNavigationBarItem(
@@ -214,14 +214,14 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Text(
                   article.title,
-                  style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
                 SizedBox(height: 6.h),
                 Text(
                   article.snippet,
-                  style: TextStyle(fontSize: 14.sp, color: Colors.grey[700]),
+                  style: TextStyle(fontSize: 10.sp, color: Colors.grey[700]),
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -231,13 +231,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Text(
                       article.date,
-                      style: TextStyle(fontSize: 12.sp, color: Colors.grey[600]),
+                      style: TextStyle(fontSize: 8.sp, color: Colors.grey[600]),
                     ),
                     IconButton(
                       icon: Icon(
                         _isFavorite(article.id) ? Icons.bookmark : Icons.bookmark_border,
                         color: _isFavorite(article.id) ? Colors.deepPurple : Colors.grey,
-                        size: 24.sp,
+                        size: 16.sp,
                       ),
                       onPressed: () => _toggleFavorite(article.id),
                     ),
@@ -309,14 +309,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Text(
                       article.title,
-                      style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w600),
+                      style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(height: 4.h),
                     Text(
                       article.date,
-                      style: TextStyle(fontSize: 12.sp, color: Colors.grey[600]),
+                      style: TextStyle(fontSize: 10.sp, color: Colors.grey[600]),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
