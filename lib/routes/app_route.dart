@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:uas_kel7/views/explore_screen.dart';
 import 'package:uas_kel7/views/splash_screen.dart';
 import 'package:uas_kel7/views/home_screen.dart';
 import 'route_names.dart';
@@ -49,9 +50,8 @@ class AppRoute {
         GoRoute(
           path: '/explore',
           name: RouteNames.explore,
-          // Sementara
           pageBuilder:
-              (context, state) => _dummyPage(context, state, 'Explore Screen'),
+              (context, state) => MaterialPage(child: ExploreScreen()),
         ),
         GoRoute(
           path: '/favorites',
