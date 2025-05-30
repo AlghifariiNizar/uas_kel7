@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:uas_kel7/views/explore_screen.dart';
 import 'package:uas_kel7/views/favorite_screen.dart';
+import 'package:uas_kel7/views/login_screen.dart';
 import 'package:uas_kel7/views/splash_screen.dart';
 import 'package:uas_kel7/views/home_screen.dart';
 import 'route_names.dart';
@@ -42,6 +43,11 @@ class AppRoute {
           path: '/',
           name: RouteNames.splash,
           pageBuilder: (context, state) => MaterialPage(child: SplashScreen()),
+        ),
+        GoRoute(
+          path: RouteNames.login, // Path untuk login screen
+          name: RouteNames.login,
+          pageBuilder: (context, state) => const MaterialPage(child: LoginScreen()),
         ),
         GoRoute(
           path: '/home',
