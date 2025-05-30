@@ -51,9 +51,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         // Sudah di Favorites
         break;
       case 3:
-        ScaffoldMessenger.of(context).showSnackBar(
-         const SnackBar(content: Text('Halaman Profil belum diimplementasikan'), duration: Duration(seconds: 1)),
-        );
+        context.goNamed(RouteNames.profile);
         break;
     }
   }

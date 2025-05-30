@@ -4,6 +4,7 @@ import 'package:uas_kel7/views/explore_screen.dart';
 import 'package:uas_kel7/views/favorite_screen.dart';
 import 'package:uas_kel7/views/intro_screen';
 import 'package:uas_kel7/views/login_screen.dart';
+import 'package:uas_kel7/views/profile_screen.dart';
 import 'package:uas_kel7/views/register_screen.dart';
 import 'package:uas_kel7/views/splash_screen.dart';
 import 'package:uas_kel7/views/home_screen.dart';
@@ -78,12 +79,12 @@ class AppRoute {
           pageBuilder:
               (context, state) => MaterialPage(child: FavoritesScreen()),
         ),
-        // GoRoute(
-        //   path: '/profile',
-        // name: RouteNames.profile, Jika akan digunakan tambahkan di route_names.dart
-        // // Sementara
-        //   pageBuilder: (context, state) => _dummyPage(context, state, 'Profile Screen'),
-        // ),
+        GoRoute(
+          path: '/profile',
+          name: RouteNames.profile,
+          pageBuilder:
+              (context, state) => MaterialPage(child: ProfileScreen()),
+        ),
       ],
     );
   }

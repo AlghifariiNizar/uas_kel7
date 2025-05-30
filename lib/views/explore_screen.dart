@@ -104,14 +104,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
         context.goNamed(RouteNames.favorites);
         break;
       case 3:
-        // untuk RouteNames.profile
-        // context.goNamed(RouteNames.profile);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Halaman Profil belum diimplementasikan'),
-            duration: Duration(seconds: 1),
-          ),
-        );
+        context.goNamed(RouteNames.profile);
         break;
     }
   }
