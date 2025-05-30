@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:uas_kel7/views/article_detail_screen.dart';
 import 'package:uas_kel7/views/explore_screen.dart';
 import 'package:uas_kel7/views/favorite_screen.dart';
-import 'package:uas_kel7/views/intro_screen';
+import 'package:uas_kel7/views/intro_screen.dart';
 import 'package:uas_kel7/views/login_screen.dart';
 import 'package:uas_kel7/views/profile_screen.dart';
 import 'package:uas_kel7/views/register_screen.dart';
@@ -87,7 +87,7 @@ class AppRoute {
               (context, state) => MaterialPage(child: ProfileScreen()),
         ),
         GoRoute(
-          path: RouteNames.articleDetail, // contoh: /article/:articleId
+          path: '/article/:articleId', // contoh: /article/:articleId
           name: RouteNames.articleDetail,
           pageBuilder: (context, state) {
             // Mengambil articleId dari path parameters

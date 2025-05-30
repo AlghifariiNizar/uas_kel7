@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:uas_kel7/models/article_model.dart';
-import 'package:uas_kel7/data/article_data.dart';  
+import 'package:uas_kel7/data/article_data.dart';
+import 'package:uas_kel7/routes/route_names.dart';  
 import 'package:uas_kel7/services/favorite_service.dart';
 
 class ArticleDetailScreen extends StatefulWidget {
@@ -77,7 +78,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
         appBar: AppBar(
           leading: IconButton(
             icon: Icon(Icons.arrow_back_ios_new, color: Colors.black87, size: 20.sp),
-            onPressed: () => context.pop(),
+            onPressed: () => context.goNamed(RouteNames.home),
           ),
           backgroundColor: Colors.white,
           elevation: 0,
@@ -98,13 +99,13 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios_new, color: Colors.black87, size: 20.sp),
-          onPressed: () => context.pop(),
+          onPressed: () => context.goNamed(RouteNames.home),
         ),
         actions: [
           IconButton(
             icon: Icon(
               _isFavorite() ? Icons.bookmark : Icons.bookmark_border,
-              color: _isFavorite() ? Colors.deepPurple : Colors.black87,
+              color: _isFavorite() ? const Color.fromARGB(255, 47, 12, 243) : Colors.black87,
               size: 24.sp,
             ),
             onPressed: _toggleFavorite,
@@ -120,16 +121,16 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
             Text(
               articleCategory,
               style: TextStyle(
-                fontSize: 14.sp,
+                fontSize: 10.sp,
                 fontWeight: FontWeight.w600,
-                color: Colors.deepPurple,
+                color: Colors.grey,
               ),
             ),
             SizedBox(height: 8.h),
             Text(
               _article!.title,
               style: TextStyle(
-                fontSize: 22.sp,
+                fontSize: 16.sp,
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
                 height: 1.3,
@@ -141,7 +142,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                 Text(
                   _article!.date,
                   style: TextStyle(
-                    fontSize: 12.sp,
+                    fontSize: 10.sp,
                     color: Colors.grey[700],
                   ),
                 ),
@@ -149,7 +150,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                 Text(
                   '•',
                   style: TextStyle(
-                    fontSize: 12.sp,
+                    fontSize: 10.sp,
                     color: Colors.grey[700],
                   ),
                 ),
@@ -157,7 +158,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                 Text(
                   articleSource,
                   style: TextStyle(
-                    fontSize: 12.sp,
+                    fontSize: 10.sp,
                     color: Colors.grey[700],
                     fontWeight: FontWeight.w500,
                   ),
@@ -203,10 +204,11 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
             Text(
               articleContent,
               style: TextStyle(
-                fontSize: 15.sp,
+                fontSize: 12.sp,
                 color: Colors.black87,
                 height: 1.6,
                 letterSpacing: 0.2,
+                
               ),
             ),
             SizedBox(height: 20.h),
