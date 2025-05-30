@@ -42,10 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _handleSignUp() {
-    print('Sign Up pressed');
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Sign Up pressed (Placeholder)')),
-    );
+    context.goNamed(RouteNames.register);
   }
 
   @override
