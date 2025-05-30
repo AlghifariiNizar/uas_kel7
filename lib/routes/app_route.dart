@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:uas_kel7/views/article_detail_screen.dart';
 import 'package:uas_kel7/views/explore_screen.dart';
 import 'package:uas_kel7/views/favorite_screen.dart';
 import 'package:uas_kel7/views/intro_screen';
@@ -84,6 +85,21 @@ class AppRoute {
           name: RouteNames.profile,
           pageBuilder:
               (context, state) => MaterialPage(child: ProfileScreen()),
+        ),
+        GoRoute(
+          path: RouteNames.articleDetail, // contoh: /article/:articleId
+          name: RouteNames.articleDetail,
+          pageBuilder: (context, state) {
+            // Mengambil articleId dari path parameters
+            final articleId = state.pathParameters['articleId'];
+            // Memastikan articleId tidak null sebelum membuat halaman
+            if (articleId == null) {
+              // Jika ID null, bisa arahkan ke halaman error atau default
+              print("Error: articleId is null for path ${state.uri}");
+              return const MaterialPage(child: Scaffold(body: Center(child: Text("ID Artikel tidak valid atau hilang."))));
+            }
+            return MaterialPage(child: ArticleDetailScreen(articleId: articleId));
+          },
         ),
       ],
     );

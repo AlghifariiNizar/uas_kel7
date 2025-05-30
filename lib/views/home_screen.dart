@@ -34,22 +34,26 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _onFavoritesChanged() {
     if (mounted) {
-      setState(() {
-      });
+      setState(() {});
     }
   }
 
-
   void _toggleFavorite(String articleId) {
-    _favoriteService.toggleFavorite(articleId); 
+    _favoriteService.toggleFavorite(articleId);
     if (_favoriteService.isFavorite(articleId)) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Artikel ditambahkan ke favorit'), duration: Duration(seconds: 1)),
-        );
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Artikel ditambahkan ke favorit'),
+          duration: Duration(seconds: 1),
+        ),
+      );
     } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Artikel dihapus dari favorit'), duration: Duration(seconds: 1)),
-        );
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Artikel dihapus dari favorit'),
+          duration: Duration(seconds: 1),
+        ),
+      );
     }
   }
 
@@ -72,15 +76,28 @@ class _HomeScreenState extends State<HomeScreen> {
         context.goNamed(RouteNames.favorites);
         break;
       case 3:
-        context.goNamed(RouteNames.profile); 
+        context.goNamed(RouteNames.profile);
         break;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final Article mainArticle = dummyArticles.isNotEmpty ? dummyArticles.first : Article(id: '', title: 'Kosong', snippet: '', imageUrl: '', date: '');
-    final List<Article> otherArticles = dummyArticles.length > 1 ? dummyArticles.sublist(1) : [];
+    final Article mainArticle =
+        dummyArticles.isNotEmpty
+            ? dummyArticles.first
+            : Article(
+              id: '',
+              title: 'Kosong',
+              snippet: '',
+              imageUrl: '',
+              date: '',
+              category: '',
+              source: '',
+              fullContent: '',
+            );
+    final List<Article> otherArticles =
+        dummyArticles.length > 1 ? dummyArticles.sublist(1) : [];
 
     return Scaffold(
       appBar: AppBar(
@@ -102,7 +119,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Center(
                   child: Text(
                     'Logo',
-                    style: TextStyle(color: Colors.white, fontSize: 10.sp, fontWeight: FontWeight.normal),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 10.sp,
+                      fontWeight: FontWeight.normal,
+                    ),
                   ),
                 ),
               ),
@@ -114,18 +135,28 @@ class _HomeScreenState extends State<HomeScreen> {
                     context.goNamed(RouteNames.explore);
                   },
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 16.w,
+                      vertical: 10.h,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
                       borderRadius: BorderRadius.circular(20.r),
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.search, color: Colors.grey[600], size: 16.sp),
+                        Icon(
+                          Icons.search,
+                          color: Colors.grey[600],
+                          size: 16.sp,
+                        ),
                         SizedBox(width: 8.w),
                         Text(
                           'Search..',
-                          style: TextStyle(color: Colors.grey[600], fontSize: 10.sp),
+                          style: TextStyle(
+                            color: Colors.grey[600],
+                            fontSize: 10.sp,
+                          ),
                         ),
                       ],
                     ),
@@ -139,17 +170,23 @@ class _HomeScreenState extends State<HomeScreen> {
       body: ListView(
         padding: EdgeInsets.all(16.w),
         children: [
-          if (dummyArticles.isNotEmpty) _buildMainArticleCard(context, mainArticle),
+          if (dummyArticles.isNotEmpty)
+            _buildMainArticleCard(context, mainArticle),
           SizedBox(height: 20.h),
           if (otherArticles.isNotEmpty)
-            ...otherArticles.map((article) => _buildArticleListItem(context, article)).toList(),
+            ...otherArticles
+                .map((article) => _buildArticleListItem(context, article))
+                .toList(),
           if (dummyArticles.isEmpty)
             Center(
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 50.h),
-                child: Text("Tidak ada artikel tersedia.", style: TextStyle(fontSize: 16.sp, color: Colors.grey)),
-              )
-            )
+                child: Text(
+                  "Tidak ada artikel tersedia.",
+                  style: TextStyle(fontSize: 16.sp, color: Colors.grey),
+                ),
+              ),
+            ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -157,7 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
         onTap: _onBottomNavTapped,
         type: BottomNavigationBarType.fixed,
         selectedItemColor: const Color.fromARGB(255, 47, 12, 243),
-        unselectedItemColor: Colors.grey, 
+        unselectedItemColor: Colors.grey,
         selectedFontSize: 12.sp,
         unselectedFontSize: 12.sp,
         items: const [
@@ -204,19 +241,29 @@ class _HomeScreenState extends State<HomeScreen> {
                 width: double.infinity,
                 height: 200.h,
                 color: Colors.grey[300],
-                child: Icon(Icons.broken_image, size: 50.sp, color: Colors.grey[600]),
+                child: Icon(
+                  Icons.broken_image,
+                  size: 50.sp,
+                  color: Colors.grey[600],
+                ),
               );
             },
-            loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+            loadingBuilder: (
+              BuildContext context,
+              Widget child,
+              ImageChunkEvent? loadingProgress,
+            ) {
               if (loadingProgress == null) return child;
               return SizedBox(
                 width: double.infinity,
                 height: 200.h,
                 child: Center(
                   child: CircularProgressIndicator(
-                    value: loadingProgress.expectedTotalBytes != null
-                        ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                        : null,
+                    value:
+                        loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded /
+                                loadingProgress.expectedTotalBytes!
+                            : null,
                   ),
                 ),
               );
@@ -229,7 +276,10 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Text(
                   article.title,
-                  style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -250,8 +300,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     IconButton(
                       icon: Icon(
-                        _isFavorite(article.id) ? Icons.bookmark : Icons.bookmark_border,
-                        color: _isFavorite(article.id) ? const Color.fromARGB(255, 47, 12, 243) : Colors.grey,
+                        _isFavorite(article.id)
+                            ? Icons.bookmark
+                            : Icons.bookmark_border,
+                        color:
+                            _isFavorite(article.id)
+                                ? const Color.fromARGB(255, 47, 12, 243)
+                                : Colors.grey,
                         size: 16.sp,
                       ),
                       onPressed: () => _toggleFavorite(article.id),
@@ -275,10 +330,18 @@ class _HomeScreenState extends State<HomeScreen> {
       child: InkWell(
         onTap: () {
           // Navigasi ke detail artikel
-          // context.goNamed(RouteNames.articleDetail, params: {'id': article.id});
-           ScaffoldMessenger.of(context).showSnackBar(
-             SnackBar(content: Text('Navigasi ke detail artikel: ${article.title}'), duration: const Duration(seconds: 1)),
-           );
+          context.goNamed(
+            RouteNames.articleDetail,
+            pathParameters: {
+              'articleId': article.id,
+            },
+          );
+          // ScaffoldMessenger.of(context).showSnackBar(
+          //   SnackBar(
+          //     content: Text('Navigasi ke detail artikel: ${article.title}'),
+          //     duration: const Duration(seconds: 1),
+          //   ),
+          // );
         },
         child: Padding(
           padding: EdgeInsets.all(10.w),
@@ -296,10 +359,18 @@ class _HomeScreenState extends State<HomeScreen> {
                       width: 100.w,
                       height: 80.h,
                       color: Colors.grey[200],
-                      child: Icon(Icons.broken_image, size: 30.sp, color: Colors.grey[500]),
+                      child: Icon(
+                        Icons.broken_image,
+                        size: 30.sp,
+                        color: Colors.grey[500],
+                      ),
                     );
                   },
-                   loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                  loadingBuilder: (
+                    BuildContext context,
+                    Widget child,
+                    ImageChunkEvent? loadingProgress,
+                  ) {
                     if (loadingProgress == null) return child;
                     return SizedBox(
                       width: 100.w,
@@ -307,9 +378,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Center(
                         child: CircularProgressIndicator(
                           strokeWidth: 2.0,
-                          value: loadingProgress.expectedTotalBytes != null
-                              ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                              : null,
+                          value:
+                              loadingProgress.expectedTotalBytes != null
+                                  ? loadingProgress.cumulativeBytesLoaded /
+                                      loadingProgress.expectedTotalBytes!
+                                  : null,
                         ),
                       ),
                     );
@@ -324,14 +397,20 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Text(
                       article.title,
-                      style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(height: 4.h),
                     Text(
                       article.date,
-                      style: TextStyle(fontSize: 10.sp, color: Colors.grey[600]),
+                      style: TextStyle(
+                        fontSize: 10.sp,
+                        color: Colors.grey[600],
+                      ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -340,8 +419,13 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               IconButton(
                 icon: Icon(
-                  _isFavorite(article.id) ? Icons.bookmark : Icons.bookmark_border,
-                  color: _isFavorite(article.id) ? const Color.fromARGB(255, 47, 12, 243) : Colors.grey,
+                  _isFavorite(article.id)
+                      ? Icons.bookmark
+                      : Icons.bookmark_border,
+                  color:
+                      _isFavorite(article.id)
+                          ? const Color.fromARGB(255, 47, 12, 243)
+                          : Colors.grey,
                   size: 16.sp,
                 ),
                 padding: EdgeInsets.zero,

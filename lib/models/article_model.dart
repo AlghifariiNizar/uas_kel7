@@ -4,6 +4,9 @@ class Article{
   final String snippet;
   final String imageUrl;
   final String date;
+  final String category;
+  final String source;
+  final String fullContent;
   // bool isFavorite;
 
   Article({
@@ -12,6 +15,9 @@ class Article{
     required this.snippet,
     required this.imageUrl,
     required this.date,
+    required this.category,
+    required this.source,
+    required this.fullContent,
     // this.isFavorite = false,
   });
 }
