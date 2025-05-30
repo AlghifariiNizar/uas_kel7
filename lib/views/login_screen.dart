@@ -14,7 +14,6 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool _isPasswordVisible = false;
 
   @override
   void dispose() {
@@ -63,18 +62,15 @@ class _LoginScreenState extends State<LoginScreen> {
               Text(
                 'Hello,',
                 style: TextStyle(
-                  fontSize: 32.sp,
+                  fontSize: 24.sp,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
               ),
-              SizedBox(height: 8.h),
-
-              // Teks "Welcome Back"
               Text(
                 'Welcome Back',
                 style: TextStyle(
-                  fontSize: 24.sp,
+                  fontSize: 16.sp,
                   fontWeight: FontWeight.w500,
                   color: Colors.grey[700],
                 ),
@@ -85,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Text(
                 'Email',
                 style: TextStyle(
-                  fontSize: 14.sp,
+                  fontSize: 12.sp,
                   fontWeight: FontWeight.w500,
                   color: Colors.black87,
                 ),
@@ -97,7 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                   hintText: 'Input Your Email Account',
-                  hintStyle: TextStyle(color: Colors.grey[400], fontSize: 14.sp),
+                  hintStyle: TextStyle(color: Colors.grey[400], fontSize: 10.sp),
                   filled: true,
                   fillColor: Colors.grey[50], // Warna fill sedikit abu-abu
                   contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
@@ -122,7 +118,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Text(
                 'Password',
                 style: TextStyle(
-                  fontSize: 14.sp,
+                  fontSize: 12.sp,
                   fontWeight: FontWeight.w500,
                   color: Colors.black87,
                 ),
@@ -131,10 +127,9 @@ class _LoginScreenState extends State<LoginScreen> {
               // TextField Password
               TextField(
                 controller: _passwordController,
-                obscureText: !_isPasswordVisible,
                 decoration: InputDecoration(
                   hintText: 'Password',
-                  hintStyle: TextStyle(color: Colors.grey[400], fontSize: 14.sp),
+                  hintStyle: TextStyle(color: Colors.grey[400], fontSize: 10.sp),
                   filled: true,
                   fillColor: Colors.grey[50],
                   contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
@@ -150,25 +145,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     borderRadius: BorderRadius.circular(12.r),
                     borderSide: BorderSide(color: Colors.deepPurple, width: 1.5),
                   ),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _isPasswordVisible ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                      color: Colors.grey[600],
-                      size: 20.sp,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _isPasswordVisible = !_isPasswordVisible;
-                      });
-                    },
-                  ),
                 ),
                 style: TextStyle(fontSize: 14.sp, color: Colors.black87),
               ),
               SizedBox(height: 12.h),
 
               Align(
-                alignment: Alignment.centerRight,
+                alignment: Alignment.centerLeft,
                 child: TextButton(
                   onPressed: _handleForgotPassword,
                   style: TextButton.styleFrom(
@@ -179,41 +162,44 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Text(
                     'Forgot Password',
                     style: TextStyle(
-                      fontSize: 13.sp,
+                      fontSize: 10.sp,
                       color: Colors.orangeAccent[700], 
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
               ),
-              SizedBox(height: 40.h),
+              SizedBox(height: 140.h),
 
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: _handleLogin,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.deepPurple,
+                    backgroundColor: const Color.fromARGB(255, 47, 12, 243),
                     padding: EdgeInsets.symmetric(vertical: 16.h),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12.r),
                     ),
                     elevation: 2,
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Sign In',
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Sign In',
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 8.w),
-                      Icon(Icons.arrow_forward, color: Colors.white, size: 20.sp),
-                    ],
+                        SizedBox(width: 8.w),
+                        Icon(Icons.arrow_forward, color: Colors.white, size: 20.sp),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -225,14 +211,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   text: TextSpan(
                     text: "Don't have an account? ",
                     style: TextStyle(
-                      fontSize: 14.sp,
+                      fontSize: 10.sp,
                       color: Colors.grey[700],
                     ),
                     children: [
                       TextSpan(
                         text: 'Sign up',
                         style: TextStyle(
-                          fontSize: 14.sp,
+                          fontSize: 10.sp,
                           color: Colors.orangeAccent[700],
                           fontWeight: FontWeight.bold,
                         ),
