@@ -1,107 +1,112 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:uas_kel7/views/article_detail_screen.dart';
-import 'package:uas_kel7/views/explore_screen.dart';
-import 'package:uas_kel7/views/favorite_screen.dart';
+import 'package:uas_kel7/services/auth_service.dart';
+import 'package:uas_kel7/views/splash_screen.dart';
 import 'package:uas_kel7/views/intro_screen.dart';
 import 'package:uas_kel7/views/login_screen.dart';
-import 'package:uas_kel7/views/profile_screen.dart';
 import 'package:uas_kel7/views/register_screen.dart';
-import 'package:uas_kel7/views/splash_screen.dart';
 import 'package:uas_kel7/views/home_screen.dart';
+import 'package:uas_kel7/views/explore_screen.dart';
+import 'package:uas_kel7/views/favorite_screen.dart';
+import 'package:uas_kel7/views/profile_screen.dart';
+import 'package:uas_kel7/views/article_detail_screen.dart';
 import 'route_names.dart';
 
 class AppRoute {
-  AppRoute._();
+  final AuthService authService;
+  GoRouter? _goRouter;
 
-  static final AppRoute _instance = AppRoute._();
-
-  static AppRoute get instance => _instance;
-
-  factory AppRoute() {
-    _instance.goRouter ??= goRouterSetup();
-
-    return _instance;
+  AppRoute(this.authService) {
+    _goRouter ??= goRouterSetup();
   }
 
-  static MaterialPage _dummyPage(
-    BuildContext context,
-    GoRouterState state,
-    String pageName,
-  ) {
-    return MaterialPage(
-      key: state.pageKey,
-      child: Scaffold(
-        appBar: AppBar(title: Text(pageName)),
-        body: Center(child: Text('$pageName belum diimplementasikan.')),
-      ),
-    );
-  }
+  GoRouter get goRouter => _goRouter!;
 
-  GoRouter? goRouter;
-  static GoRouter goRouterSetup() {
+  GoRouter goRouterSetup() {
     return GoRouter(
       initialLocation: RouteNames.splash,
+      refreshListenable: authService,
+      redirect: (BuildContext context, GoRouterState state) {
+        final bool isLoggedIn = authService.isAuth;
+        final String location = state.uri.toString();
+
+        final bool isPublicRoute = location == RouteNames.splash ||
+                                   location == RouteNames.intro ||
+                                   location == RouteNames.login ||
+                                   location == RouteNames.register;
+
+        if (!isLoggedIn && !isPublicRoute) {
+          return RouteNames.login;
+        }
+
+        if (isLoggedIn && (location == RouteNames.login || location == RouteNames.register || location == RouteNames.intro)) {
+          return RouteNames.home;
+        }
+
+        return null;
+      },
       routes: [
         GoRoute(
-          path: '/',
+          path: RouteNames.splash,
           name: RouteNames.splash,
-          pageBuilder: (context, state) => MaterialPage(child: SplashScreen()),
+          pageBuilder: (context, state) => const MaterialPage(child: SplashScreen()),
         ),
         GoRoute(
-          path: '/intro',
+          path: RouteNames.intro,
           name: RouteNames.intro,
           pageBuilder: (context, state) => const MaterialPage(child: IntroScreen()),
         ),
         GoRoute(
-          path: '/login',
+          path: RouteNames.login,
           name: RouteNames.login,
           pageBuilder: (context, state) => const MaterialPage(child: LoginScreen()),
         ),
         GoRoute(
-          path: '/register',
+          path: RouteNames.register,
           name: RouteNames.register,
           pageBuilder: (context, state) => const MaterialPage(child: RegisterScreen()),
         ),
         GoRoute(
-          path: '/home',
+          path: RouteNames.home,
           name: RouteNames.home,
-          pageBuilder: (context, state) => MaterialPage(child: HomeScreen()),
+          pageBuilder: (context, state) => const MaterialPage(child: HomeScreen()),
         ),
         GoRoute(
-          path: '/explore',
+          path: RouteNames.explore,
           name: RouteNames.explore,
-          pageBuilder:
-              (context, state) => MaterialPage(child: ExploreScreen()),
+          pageBuilder: (context, state) => const MaterialPage(child: ExploreScreen()),
         ),
         GoRoute(
-          path: '/favorites',
+          path: RouteNames.favorites,
           name: RouteNames.favorites,
-          pageBuilder:
-              (context, state) => MaterialPage(child: FavoritesScreen()),
+          pageBuilder: (context, state) => const MaterialPage(child: FavoritesScreen()),
         ),
         GoRoute(
-          path: '/profile',
+          path: RouteNames.profile,
           name: RouteNames.profile,
-          pageBuilder:
-              (context, state) => MaterialPage(child: ProfileScreen()),
+          pageBuilder: (context, state) => const MaterialPage(child: ProfileScreen()),
         ),
         GoRoute(
-          path: '/article/:articleId', // contoh: /article/:articleId
+          path: RouteNames.articleDetail,
           name: RouteNames.articleDetail,
           pageBuilder: (context, state) {
-            // Mengambil articleId dari path parameters
             final articleId = state.pathParameters['articleId'];
-            // Memastikan articleId tidak null sebelum membuat halaman
             if (articleId == null) {
-              // Jika ID null, bisa arahkan ke halaman error atau default
-              print("Error: articleId is null for path ${state.uri}");
-              return const MaterialPage(child: Scaffold(body: Center(child: Text("ID Artikel tidak valid atau hilang."))));
+              return const MaterialPage(child: Scaffold(body: Center(child: Text("ID Artikel tidak valid"))));
             }
             return MaterialPage(child: ArticleDetailScreen(articleId: articleId));
           },
         ),
       ],
+      errorPageBuilder: (context, state) {
+        return MaterialPage(
+          key: state.pageKey,
+          child: Scaffold(
+            appBar: AppBar(title: const Text('Error Halaman')),
+            body: Center(child: Text('Halaman tidak ditemukan: ${state.error?.message}')),
+          ),
+        );
+      },
     );
   }
 }

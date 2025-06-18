@@ -1,10 +1,19 @@
+// lib/main.dart
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 import 'package:uas_kel7/routes/app_route.dart';
+import 'package:uas_kel7/services/auth_service.dart';
 
 void main() {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(
+    ChangeNotifierProvider(
+      create: (ctx) => AuthService(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -13,6 +22,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+    final authService = Provider.of<AuthService>(context, listen: false);
+    final appRouter = AppRoute(authService);
 
     return ScreenUtilInit(
       designSize: const Size(360, 800),
@@ -23,11 +35,10 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: 'Uas Kel 7',
           theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 47, 12, 243)),
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             useMaterial3: true,
-            fontFamily: 'Poppins',
           ),
-          routerConfig: AppRoute().goRouter,
+          routerConfig: appRouter.goRouter,
         );
       },
     );

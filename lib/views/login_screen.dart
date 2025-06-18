@@ -2,7 +2,9 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:uas_kel7/routes/route_names.dart';
+import 'package:uas_kel7/services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -12,8 +14,52 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final  _emailController = TextEditingController(text: 'news@itg.ac.id');
+  final  _passwordController = TextEditingController(text: 'ITG#news');
+  bool _isLoading = false;
+
+    Future<void> _login() async {
+    print('--- Tombol Login Ditekan! Proses _login() dimulai. ---');
+
+    setState(() { _isLoading = true; });
+
+    print('Mencoba memanggil Provider.of<AuthService>...');
+
+    try {
+        await Provider.of<AuthService>(context, listen: false).login(
+            _emailController.text,
+            _passwordController.text,
+        );
+        print('Pemanggilan AuthService.login() selesai tanpa error langsung.');
+
+    } catch (error, stackTrace) {
+        // BLOK INI AKAN JALAN JIKA ADA ERROR
+        print('--- TERJADI ERROR SAAT MENCOBA LOGIN! ---');
+        print('TIPE ERROR: ${error.runtimeType}');
+        print('PESAN ERROR: $error');
+        print('STACK TRACE:');
+        print(stackTrace);
+        print('-------------------------------------------');
+        
+        showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+                title: Text('Login Gagal'),
+                content: Text(error.toString()),
+                actions: <Widget>[
+                    TextButton(
+                        child: Text('OK'),
+                        onPressed: () => Navigator.of(ctx).pop(),
+                    )
+                ],
+            ),
+        );
+    }
+    
+    if (mounted) {
+        setState(() { _isLoading = false; });
+    }
+}
 
   @override
   void dispose() {
@@ -22,16 +68,32 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  void _handleLogin() {
-    final email = _emailController.text;
-    final password = _passwordController.text;
-    print('Email: $email');
-    print('Password: $password');
-    context.goNamed(RouteNames.home);
+  Future<void> _handleLogin() async {
+    setState(() {
+      _isLoading = true;
+    });
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Login Successful')),
-    );
+    try {
+      final email = _emailController.text;
+      final password = _passwordController.text;
+      // Panggil metode login dari AuthService tanpa listen
+      await Provider.of<AuthService>(context, listen: false).login(email, password);
+      // Navigasi tidak diperlukan di sini. `go_router` dengan `refreshListenable`
+      // akan mendeteksi perubahan status login dan melakukan redirect secara otomatis.
+    } catch (error) {
+      // Tampilkan pesan error jika login gagal
+      if(mounted){
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(error.toString())),
+        );
+      }
+    } finally {
+      if(mounted){
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   void _handleForgotPassword() {
@@ -171,7 +233,7 @@ class _LoginScreenState extends State<LoginScreen> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: _handleLogin,
+                  onPressed: _login,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 47, 12, 243),
                     padding: EdgeInsets.symmetric(vertical: 16.h),

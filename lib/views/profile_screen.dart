@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:uas_kel7/routes/route_names.dart';
+import 'package:uas_kel7/services/auth_service.dart';
+import 'package:uas_kel7/views/splash_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -67,13 +70,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // context.goNamed(RouteNames.history);
   }
 
-  void _handleLogOut() {
-    print('Log out tapped');
-    context.goNamed(RouteNames.login);
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Logged out successfully!')),
-    );
+  void _handleLogOut() async {
+    // Panggil metode logout dari AuthService
+    await Provider.of<AuthService>(context, listen: false).logout();
+    // Navigasi akan di-handle oleh redirect di go_router.
+    // Memanggil goNamed di sini bisa memastikan transisi yang lebih mulus.
+    if(mounted){
+       context.goNamed(RouteNames.login);
+    }
   }
 
   Widget _buildProfileOptionItem({
@@ -103,6 +107,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
+    
     return Scaffold(
       backgroundColor: Colors.grey[50],
       body: SafeArea(

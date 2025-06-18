@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:uas_kel7/routes/route_names.dart';
+import 'package:uas_kel7/views/auth_check_screen.dart';
 
 class IntroScreen extends StatelessWidget {
   const IntroScreen({super.key});
 
   void _handleGetStarted(BuildContext context) {
-    context.goNamed(RouteNames.login);
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => AuthCheckScreen()),
+    );
   }
 
   @override
@@ -21,12 +25,12 @@ class IntroScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Spacer(flex: 2), 
+              const Spacer(flex: 2),
 
               ClipRRect(
                 borderRadius: BorderRadius.circular(16.r),
                 child: Image.asset(
-                  'assets/images/news2.jpeg', 
+                  'assets/images/news2.jpeg',
                   width: 300.w,
                   height: 200.h,
                   fit: BoxFit.cover,
@@ -38,7 +42,11 @@ class IntroScreen extends StatelessWidget {
                         color: Colors.grey[200],
                         borderRadius: BorderRadius.circular(16.r),
                       ),
-                      child: Icon(Icons.map_outlined, size: 80.sp, color: Colors.grey[400]),
+                      child: Icon(
+                        Icons.map_outlined,
+                        size: 80.sp,
+                        color: Colors.grey[400],
+                      ),
                     );
                   },
                 ),
@@ -59,12 +67,9 @@ class IntroScreen extends StatelessWidget {
               Text(
                 'Temukan berita pilihan dalam genggaman.',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  color: Colors.grey[700],
-                ),
+                style: TextStyle(fontSize: 12.sp, color: Colors.grey[700]),
               ),
-              const Spacer(flex: 3), 
+              const Spacer(flex: 3),
 
               SizedBox(
                 width: double.infinity,

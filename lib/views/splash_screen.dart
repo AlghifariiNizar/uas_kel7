@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:uas_kel7/routes/route_names.dart';
+import 'package:uas_kel7/services/auth_service.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -13,11 +15,32 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 3), () {
-      if (mounted) {
-        context.goNamed(RouteNames.intro);
-      }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkAuthAndNavigate();
     });
+    // Future.delayed(const Duration(seconds: 3), () {
+    //   if (mounted) {
+    //     context.goNamed(RouteNames.intro);
+    //   }
+    // });
+  }
+
+  Future<void> _checkAuthAndNavigate() async {
+    // Beri jeda agar splash screen terlihat
+    await Future.delayed(const Duration(seconds: 2));
+
+    if (mounted) {
+      final authService = Provider.of<AuthService>(context, listen: false);
+      await authService.tryAutoLogin();
+
+      if (mounted) {
+        if (authService.isAuth) {
+          context.goNamed(RouteNames.home);
+        } else {
+          context.goNamed(RouteNames.intro);
+        }
+      }
+    }
   }
 
   @override
