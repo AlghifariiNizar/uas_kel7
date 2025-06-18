@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:uas_kel7/routes/route_names.dart';
 import 'package:uas_kel7/services/auth_service.dart';
 import 'package:uas_kel7/views/splash_screen.dart';
+import 'package:uas_kel7/models/user.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -107,8 +108,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final authService = Provider.of<AuthService>(context);
-    
+    final user = Provider.of<AuthService>(context, listen: false).user;
+
     return Scaffold(
       backgroundColor: Colors.grey[50],
       body: SafeArea(
@@ -156,7 +157,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            userName,
+                            user!.fullName,
                             style: TextStyle(
                               fontSize: 12.sp,
                               fontWeight: FontWeight.bold,
@@ -166,7 +167,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           SizedBox(height: 4.h),
                           Text(
-                            userEmail,
+                            user.email,
                             style: TextStyle(
                               fontSize: 12.sp,
                               color: Colors.white.withOpacity(0.9),
