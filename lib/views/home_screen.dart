@@ -3,7 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:uas_kel7/models/news_article.dart';
 import 'package:uas_kel7/routes/route_names.dart';
+import 'package:uas_kel7/services/api_service.dart';
+import 'package:uas_kel7/services/auth_service.dart';
 import '../models/article_model.dart';
 import '../data/article_data.dart';
 import '../services/favorite_service.dart';
@@ -20,10 +24,19 @@ class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0; // Untuk BottomNavigationBar
   final FavoriteService _favoriteService = FavoriteService();
 
+  late Future<List<NewsArticle>> _newsFuture;
+
   @override
   void initState() {
     super.initState();
     _favoriteService.addListener(_onFavoritesChanged);
+    _loadNews();
+  }
+
+  void _loadNews() {
+    final token = Provider.of<AuthService>(context, listen: false).token;
+    _newsFuture = ApiService(token).getNews();
+    setState(() {});
   }
 
   @override
@@ -83,6 +96,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
+
     final Article mainArticle =
         dummyArticles.isNotEmpty
             ? dummyArticles.first
@@ -167,27 +182,288 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      body: ListView(
-        padding: EdgeInsets.all(16.w),
-        children: [
-          if (dummyArticles.isNotEmpty)
-            _buildMainArticleCard(context, mainArticle),
-          SizedBox(height: 20.h),
-          if (otherArticles.isNotEmpty)
-            ...otherArticles
-                .map((article) => _buildArticleListItem(context, article))
-                .toList(),
-          if (dummyArticles.isEmpty)
-            Center(
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 50.h),
-                child: Text(
-                  "Tidak ada artikel tersedia.",
-                  style: TextStyle(fontSize: 16.sp, color: Colors.grey),
-                ),
-              ),
+      body: FutureBuilder<List<NewsArticle>>(
+        future: _newsFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('Tidak ada berita.'));
+          }
+
+          final newsList = snapshot.data!;
+          return RefreshIndicator(
+            onRefresh: () async => _loadNews(),
+            child: ListView.builder(
+              itemCount: newsList.length,
+              padding: EdgeInsets.all(16.w),
+              itemBuilder: (ctx, index) {
+                final article = newsList[index];
+                switch (index) {
+                  case 0:
+                    return Card(
+                      elevation: 2.0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      clipBehavior: Clip.antiAlias,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Image.network(
+                            '$article.featuredImageUrl!',
+                            width: double.infinity,
+                            height: 200.h,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                width: double.infinity,
+                                height: 200.h,
+                                color: Colors.grey[300],
+                                child: Icon(
+                                  Icons.broken_image,
+                                  size: 50.sp,
+                                  color: Colors.grey[600],
+                                ),
+                              );
+                            },
+                            loadingBuilder: (
+                              BuildContext context,
+                              Widget child,
+                              ImageChunkEvent? loadingProgress,
+                            ) {
+                              if (loadingProgress == null) return child;
+                              return SizedBox(
+                                width: double.infinity,
+                                height: 200.h,
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    value:
+                                        loadingProgress.expectedTotalBytes !=
+                                                null
+                                            ? loadingProgress
+                                                    .cumulativeBytesLoaded /
+                                                loadingProgress
+                                                    .expectedTotalBytes!
+                                            : null,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(12.w),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  article.title,
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                SizedBox(height: 6.h),
+                                Text(
+                                  article.content,
+                                  style: TextStyle(
+                                    fontSize: 10.sp,
+                                    color: Colors.grey[700],
+                                  ),
+                                  maxLines: 3,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                SizedBox(height: 8.h),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      article.summary!,
+                                      style: TextStyle(
+                                        fontSize: 8.sp,
+                                        color: Colors.grey[600],
+                                      ),
+                                    ),
+                                    // IconButton(
+                                    //   icon: Icon(
+                                    //     _isFavorite(article.id)
+                                    //         ? Icons.bookmark
+                                    //         : Icons.bookmark_border,
+                                    //     color:
+                                    //         _isFavorite(article.id)
+                                    //             ? const Color.fromARGB(255, 47, 12, 243)
+                                    //             : Colors.grey,
+                                    //     size: 16.sp,
+                                    //   ),
+                                    //   onPressed: () => _toggleFavorite(article.id),
+                                    // ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+
+                  // break;
+                  default:
+                }
+                return Card(
+                  elevation: 1.0,
+                  margin: EdgeInsets.only(bottom: 16.h),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  child: InkWell(
+                    onTap: () {
+                      // Navigasi ke detail artikel
+                      // context.goNamed(
+                      //   RouteNames.articleDetail,
+                      //   pathParameters: {'articleId': article.id},
+                      // );
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Navigasi ke detail artikel'),
+                          duration: const Duration(seconds: 1),
+                        ),
+                      );
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.all(10.w),
+                      child: Row(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(8.r),
+                            child: Image.network(
+                              '$article.featuredImageUrl!',
+                              width: 100.w,
+                              height: 80.h,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  width: 100.w,
+                                  height: 80.h,
+                                  color: Colors.grey[200],
+                                  child: Icon(
+                                    Icons.broken_image,
+                                    size: 30.sp,
+                                    color: Colors.grey[500],
+                                  ),
+                                );
+                              },
+                              loadingBuilder: (
+                                BuildContext context,
+                                Widget child,
+                                ImageChunkEvent? loadingProgress,
+                              ) {
+                                if (loadingProgress == null) return child;
+                                return SizedBox(
+                                  width: 100.w,
+                                  height: 80.h,
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2.0,
+                                      value:
+                                          loadingProgress.expectedTotalBytes !=
+                                                  null
+                                              ? loadingProgress
+                                                      .cumulativeBytesLoaded /
+                                                  loadingProgress
+                                                      .expectedTotalBytes!
+                                              : null,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          SizedBox(width: 12.w),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  article.title,
+                                  style: TextStyle(
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                SizedBox(height: 4.h),
+                                Text(
+                                  article.summary!,
+                                  style: TextStyle(
+                                    fontSize: 10.sp,
+                                    color: Colors.grey[600],
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                // Text(
+                                //   article.createdAt,
+                                //   style: TextStyle(
+                                //     fontSize: 10.sp,
+                                //     color: Colors.grey[600],
+                                //   ),
+                                //   maxLines: 1,
+                                //   overflow: TextOverflow.ellipsis,
+                                // ),
+                              ],
+                            ),
+                          ),
+                          // IconButton(
+                          //   icon: Icon(
+                          //     _isFavorite(article.id)
+                          //         ? Icons.bookmark
+                          //         : Icons.bookmark_border,
+                          //     color:
+                          //         _isFavorite(article.id)
+                          //             ? const Color.fromARGB(255, 47, 12, 243)
+                          //             : Colors.grey,
+                          //     size: 16.sp,
+                          //   ),
+                          //   padding: EdgeInsets.zero,
+                          //   constraints: const BoxConstraints(),
+                          //   onPressed: () => _toggleFavorite(article.id),
+                          // ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+              // children: [
+              //   if (dummyArticles.isNotEmpty)
+              //     _buildMainArticleCard(context, mainArticle),
+              //   SizedBox(height: 20.h),
+              //   if (otherArticles.isNotEmpty)
+              //     ...otherArticles
+              //         .map((article) => _buildArticleListItem(context, article))
+              //         .toList(),
+              //   if (dummyArticles.isEmpty)
+              //     Center(
+              //       child: Padding(
+              //         padding: EdgeInsets.symmetric(vertical: 50.h),
+              //         child: Text(
+              //           "Tidak ada artikel tersedia.",
+              //           style: TextStyle(fontSize: 16.sp, color: Colors.grey),
+              //         ),
+              //       ),
+              //     ),
+              // ],
             ),
-        ],
+          );
+        },
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
@@ -332,9 +608,7 @@ class _HomeScreenState extends State<HomeScreen> {
           // Navigasi ke detail artikel
           context.goNamed(
             RouteNames.articleDetail,
-            pathParameters: {
-              'articleId': article.id,
-            },
+            pathParameters: {'articleId': article.id},
           );
           // ScaffoldMessenger.of(context).showSnackBar(
           //   SnackBar(
