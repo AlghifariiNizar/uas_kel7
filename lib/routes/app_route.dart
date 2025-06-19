@@ -86,17 +86,6 @@ class AppRoute {
           name: RouteNames.profile,
           pageBuilder: (context, state) => const MaterialPage(child: ProfileScreen()),
         ),
-        GoRoute(
-          path: RouteNames.articleDetail,
-          name: RouteNames.articleDetail,
-          pageBuilder: (context, state) {
-            final articleId = state.pathParameters['articleId'];
-            if (articleId == null) {
-              return const MaterialPage(child: Scaffold(body: Center(child: Text("ID Artikel tidak valid"))));
-            }
-            return MaterialPage(child: ArticleDetailScreen(articleId: articleId));
-          },
-        ),
       ],
       errorPageBuilder: (context, state) {
         return MaterialPage(

@@ -8,6 +8,7 @@ import 'package:uas_kel7/models/news_article.dart';
 import 'package:uas_kel7/routes/route_names.dart';
 import 'package:uas_kel7/services/api_service.dart';
 import 'package:uas_kel7/services/auth_service.dart';
+import 'package:uas_kel7/views/article_detail_screen.dart';
 import '../models/article_model.dart';
 import '../data/article_data.dart';
 import '../services/favorite_service.dart';
@@ -323,17 +324,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   clipBehavior: Clip.antiAlias,
                   child: InkWell(
                     onTap: () {
-                      // Navigasi ke detail artikel
-                      // context.goNamed(
-                      //   RouteNames.articleDetail,
-                      //   pathParameters: {'articleId': article.id},
-                      // );
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Navigasi ke detail artikel'),
-                          duration: const Duration(seconds: 1),
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => ArticleDetailScreen(article: article),
                         ),
                       );
+                      // ScaffoldMessenger.of(context).showSnackBar(
+                      //   SnackBar(
+                      //     content: Text('Navigasi ke detail artikel'),
+                      //     duration: const Duration(seconds: 1),
+                      //   ),
+                      // );
                     },
                     child: Padding(
                       padding: EdgeInsets.all(10.w),
