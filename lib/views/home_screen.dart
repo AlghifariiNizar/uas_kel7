@@ -11,6 +11,7 @@ import 'package:uas_kel7/services/auth_service.dart';
 import 'package:uas_kel7/services/bookmark_service.dart';
 import 'package:uas_kel7/services/news_service.dart';
 import 'package:uas_kel7/views/article_detail_screen.dart';
+import 'package:uas_kel7/views/explore_screen.dart';
 import 'package:uas_kel7/views/favorite_screen.dart';
 import 'package:uas_kel7/views/profile_screen.dart';
 import '../models/article_model.dart';
@@ -89,7 +90,9 @@ class _HomeScreenState extends State<HomeScreen> {
         // context.goNamed(RouteNames.home);
         break;
       case 1:
-        context.goNamed(RouteNames.explore);
+        Navigator.of(
+          context,
+        ).push(MaterialPageRoute(builder: (context) => ExploreScreen()));
         break;
       case 2:
         // context.goNamed(RouteNames.favorites);
