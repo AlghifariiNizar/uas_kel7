@@ -30,7 +30,7 @@ class IntroScreen extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(16.r),
                 child: Image.asset(
-                  'assets/images/news2.jpeg',
+                  'assets/images/logo.jpg',
                   width: 300.w,
                   height: 200.h,
                   fit: BoxFit.cover,

@@ -146,13 +146,26 @@ class _HomeScreenState extends State<HomeScreen> {
                   borderRadius: BorderRadius.circular(8.r),
                 ),
                 child: Center(
-                  child: Text(
-                    'Logo',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 10.sp,
-                      fontWeight: FontWeight.normal,
-                    ),
+                  child: Image.asset(
+                    'assets/images/logo.jpg',
+                    width: 80.w,
+                    height: 40.h,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        width: 300.w,
+                        height: 200.h,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(16.r),
+                        ),
+                        child: Icon(
+                          Icons.map_outlined,
+                          size: 80.sp,
+                          color: Colors.grey[400],
+                        ),
+                      );
+                    },
                   ),
                 ),
               ),
@@ -222,145 +235,163 @@ class _HomeScreenState extends State<HomeScreen> {
                 final article = newsList[index];
                 switch (index) {
                   case 0:
-                    return Card(
-                      elevation: 2.0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.r),
-                      ),
-                      clipBehavior: Clip.antiAlias,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Image.network(
-                            '$article.featuredImageUrl!',
-                            width: double.infinity,
-                            height: 200.h,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Container(
-                                width: double.infinity,
-                                height: 200.h,
-                                color: Colors.grey[300],
-                                child: Icon(
-                                  Icons.broken_image,
-                                  size: 50.sp,
-                                  color: Colors.grey[600],
-                                ),
-                              );
-                            },
-                            loadingBuilder: (
-                              BuildContext context,
-                              Widget child,
-                              ImageChunkEvent? loadingProgress,
-                            ) {
-                              if (loadingProgress == null) return child;
-                              return SizedBox(
-                                width: double.infinity,
-                                height: 200.h,
-                                child: Center(
-                                  child: CircularProgressIndicator(
-                                    value:
-                                        loadingProgress.expectedTotalBytes !=
-                                                null
-                                            ? loadingProgress
-                                                    .cumulativeBytesLoaded /
-                                                loadingProgress
-                                                    .expectedTotalBytes!
-                                            : null,
-                                  ),
-                                ),
-                              );
-                            },
+                    return InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder:
+                                (context) =>
+                                    ArticleDetailScreen(article: article),
                           ),
-                          Padding(
-                            padding: EdgeInsets.all(12.w),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  article.title,
-                                  style: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.bold,
+                        );
+                        // ScaffoldMessenger.of(context).showSnackBar(
+                        //   SnackBar(
+                        //     content: Text('Navigasi ke detail artikel'),
+                        //     duration: const Duration(seconds: 1),
+                        //   ),
+                        // );
+                      },
+                      child: Card(
+                        elevation: 2.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                        clipBehavior: Clip.antiAlias,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Image.network(
+                              '$article.featuredImageUrl!',
+                              width: double.infinity,
+                              height: 200.h,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  width: double.infinity,
+                                  height: 200.h,
+                                  color: Colors.grey[300],
+                                  child: Icon(
+                                    Icons.broken_image,
+                                    size: 50.sp,
+                                    color: Colors.grey[600],
                                   ),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                SizedBox(height: 6.h),
-                                Text(
-                                  article.content,
-                                  style: TextStyle(
-                                    fontSize: 10.sp,
-                                    color: Colors.grey[700],
+                                );
+                              },
+                              loadingBuilder: (
+                                BuildContext context,
+                                Widget child,
+                                ImageChunkEvent? loadingProgress,
+                              ) {
+                                if (loadingProgress == null) return child;
+                                return SizedBox(
+                                  width: double.infinity,
+                                  height: 200.h,
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                      value:
+                                          loadingProgress.expectedTotalBytes !=
+                                                  null
+                                              ? loadingProgress
+                                                      .cumulativeBytesLoaded /
+                                                  loadingProgress
+                                                      .expectedTotalBytes!
+                                              : null,
+                                    ),
                                   ),
-                                  maxLines: 3,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                SizedBox(height: 8.h),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      article.summary!,
-                                      style: TextStyle(
-                                        fontSize: 8.sp,
-                                        color: Colors.grey[600],
-                                      ),
-                                    ),
-                                    Consumer<BookmarkService>(
-                                      builder:
-                                          (
-                                            ctx,
-                                            bookmarkService,
-                                            child,
-                                          ) => IconButton(
-                                            icon: Icon(
-                                              bookmarkService.isBookmarked(
-                                                    article.id!,
-                                                  )
-                                                  ? Icons.bookmark
-                                                  : Icons.bookmark_border,
-                                              color:
-                                                  bookmarkService.isBookmarked(
-                                                        article.id!,
-                                                      )
-                                                      ? const Color.fromARGB(
-                                                        255,
-                                                        47,
-                                                        12,
-                                                        243,
-                                                      )
-                                                      : Colors.grey,
-                                              size: 16.sp,
-                                            ),
-                                            onPressed: () {
-                                              bookmarkService.toggleBookmark(
-                                                article.id!,
-                                              );
-                                            },
-                                          ),
-                                    ),
-
-                                    // IconButton(
-                                    //   icon: Icon(
-                                    //     _isFavorite(article.id)
-                                    //         ? Icons.bookmark
-                                    //         : Icons.bookmark_border,
-                                    //     color:
-                                    //         _isFavorite(article.id)
-                                    //             ? const Color.fromARGB(255, 47, 12, 243)
-                                    //             : Colors.grey,
-                                    //     size: 16.sp,
-                                    //   ),
-                                    //   onPressed: () => _toggleFavorite(article.id),
-                                    // ),
-                                  ],
-                                ),
-                              ],
+                                );
+                              },
                             ),
-                          ),
-                        ],
+                            Padding(
+                              padding: EdgeInsets.all(12.w),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    article.title,
+                                    style: TextStyle(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  SizedBox(height: 6.h),
+                                  Text(
+                                    article.content,
+                                    style: TextStyle(
+                                      fontSize: 10.sp,
+                                      color: Colors.grey[700],
+                                    ),
+                                    maxLines: 3,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  SizedBox(height: 8.h),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        article.summary!,
+                                        style: TextStyle(
+                                          fontSize: 8.sp,
+                                          color: Colors.grey[600],
+                                        ),
+                                      ),
+                                      Consumer<BookmarkService>(
+                                        builder:
+                                            (
+                                              ctx,
+                                              bookmarkService,
+                                              child,
+                                            ) => IconButton(
+                                              icon: Icon(
+                                                bookmarkService.isBookmarked(
+                                                      article.id!,
+                                                    )
+                                                    ? Icons.bookmark
+                                                    : Icons.bookmark_border,
+                                                color:
+                                                    bookmarkService
+                                                            .isBookmarked(
+                                                              article.id!,
+                                                            )
+                                                        ? const Color.fromARGB(
+                                                          255,
+                                                          47,
+                                                          12,
+                                                          243,
+                                                        )
+                                                        : Colors.grey,
+                                                size: 16.sp,
+                                              ),
+                                              onPressed: () {
+                                                bookmarkService.toggleBookmark(
+                                                  article.id!,
+                                                );
+                                              },
+                                            ),
+                                      ),
+
+                                      // IconButton(
+                                      //   icon: Icon(
+                                      //     _isFavorite(article.id)
+                                      //         ? Icons.bookmark
+                                      //         : Icons.bookmark_border,
+                                      //     color:
+                                      //         _isFavorite(article.id)
+                                      //             ? const Color.fromARGB(255, 47, 12, 243)
+                                      //             : Colors.grey,
+                                      //     size: 16.sp,
+                                      //   ),
+                                      //   onPressed: () => _toggleFavorite(article.id),
+                                      // ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     );
 

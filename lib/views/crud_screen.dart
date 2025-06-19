@@ -23,7 +23,6 @@ class _CrudScreenState extends State<CrudScreen> {
     _loadMyNews();
   }
 
-  // Fungsi untuk memuat atau me-refresh daftar berita milik user
   void _loadMyNews() {
     final token = Provider.of<AuthService>(context, listen: false).token;
     setState(() {
@@ -31,12 +30,10 @@ class _CrudScreenState extends State<CrudScreen> {
     });
   }
 
-  // Fungsi untuk navigasi ke halaman edit
   void _editArticle(NewsArticle article) {
     Navigator.of(
       context,
     ).push(MaterialPageRoute(builder: (context) => ProfileScreen())).then((_) {
-      // Refresh daftar berita setelah kembali dari halaman edit
       _loadMyNews();
     });
   }
@@ -48,12 +45,10 @@ class _CrudScreenState extends State<CrudScreen> {
             builder: (ctx) => AddEditNewsScreen(article: article),
           ),
         )
-        .then((_) => _loadMyNews()); // Refresh list after returning
+        .then((_) => _loadMyNews()); 
   }
 
-  // Fungsi untuk menghapus artikel
   Future<void> _deleteArticle(String articleId) async {
-    // Tampilkan dialog konfirmasi
     final confirmed = await showDialog<bool>(
       context: context,
       builder:
@@ -61,7 +56,7 @@ class _CrudScreenState extends State<CrudScreen> {
             title: const Text('Konfirmasi'),
             content: const Text(
               'Apakah Anda yakin ingin menghapus berita ini ?',
-              
+
             ),
             actions: [
               TextButton(
@@ -189,7 +184,7 @@ class _CrudScreenState extends State<CrudScreen> {
                               Icons.edit,
                               color: Colors.blueAccent,
                             ),
-                            onPressed: () => _editArticle(article),
+                            onPressed: () => _navigateToAddEditScreen(article),
                             tooltip: 'Edit',
                           ),
                           IconButton(

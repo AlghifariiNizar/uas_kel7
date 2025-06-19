@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:uas_kel7/models/news_article.dart';
 import 'package:uas_kel7/routes/route_names.dart';
 import 'package:uas_kel7/services/bookmark_service.dart';
+import 'package:uas_kel7/views/explore_screen.dart';
 import 'package:uas_kel7/views/home_screen.dart';
 import 'package:uas_kel7/views/profile_screen.dart';
 import '../models/article_model.dart';
@@ -26,7 +27,10 @@ class FavoritesScreen extends StatelessWidget {
         );
         break;
       case 1:
-        context.goNamed(RouteNames.explore);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ExploreScreen()),
+        );
         break;
       case 2:
         // Sudah di Favorites

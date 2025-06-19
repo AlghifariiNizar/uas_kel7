@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:uas_kel7/routes/route_names.dart';
 import 'package:uas_kel7/services/auth_service.dart';
 import 'package:uas_kel7/views/crud_screen.dart';
+import 'package:uas_kel7/views/explore_screen.dart';
 import 'package:uas_kel7/views/favorite_screen.dart';
 import 'package:uas_kel7/views/home_screen.dart';
 import 'package:uas_kel7/views/login_screen.dart';
@@ -40,7 +41,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         );
         break;
       case 1:
-        context.goNamed(RouteNames.explore);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ExploreScreen()),
+        );
         break;
       case 2:
         Navigator.push(
@@ -255,13 +259,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.explore_outlined),
-            activeIcon: Icon(Icons.explore),
+            icon: Icon(Icons.search_outlined),
+            activeIcon: Icon(Icons.search),
             label: 'Explore',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.favorite_border),
-            activeIcon: Icon(Icons.favorite),
+            icon: Icon(Icons.bookmark_border),
+            activeIcon: Icon(Icons.bookmark),
             label: 'Favorite',
           ),
           BottomNavigationBarItem(
