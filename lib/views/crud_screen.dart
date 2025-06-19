@@ -60,7 +60,8 @@ class _CrudScreenState extends State<CrudScreen> {
           (ctx) => AlertDialog(
             title: const Text('Konfirmasi'),
             content: const Text(
-              'Apakah Anda yakin ingin menghapus berita ini?',
+              'Apakah Anda yakin ingin menghapus berita ini ?',
+              
             ),
             actions: [
               TextButton(
