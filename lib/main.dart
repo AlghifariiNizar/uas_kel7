@@ -5,12 +5,19 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:uas_kel7/routes/app_route.dart';
 import 'package:uas_kel7/services/auth_service.dart';
+import 'package:uas_kel7/services/bookmark_service.dart';
+import 'package:uas_kel7/services/news_service.dart';
+import 'package:uas_kel7/views/splash_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
-    ChangeNotifierProvider(
-      create: (ctx) => AuthService(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (ctx) => AuthService()),
+        ChangeNotifierProvider(create: (ctx) => BookmarkService()),
+        ChangeNotifierProvider(create: (ctx) => NewsService()),
+      ],
       child: const MyApp(),
     ),
   );
@@ -31,14 +38,14 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (_, child) {
-        return MaterialApp.router(
+        return MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Uas Kel 7',
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             useMaterial3: true,
           ),
-          routerConfig: appRouter.goRouter,
+          home: SplashScreen(),
         );
       },
     );

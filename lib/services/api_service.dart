@@ -94,4 +94,26 @@ class ApiService {
             throw Exception('Failed to delete news. Status: ${response.statusCode}');
         }
     }
+
+    Future<List<NewsArticle>> getMyNews() async {
+        final url = Uri.parse('$_baseUrl/api/author/news');
+        print("Meminta 'Berita Saya' dari: $url");
+
+        try {
+            final response = await http.get(url, headers: _headers);
+            print("Status Code dari GET /api/author/news: ${response.statusCode}");
+            
+            if (response.statusCode == 200) {
+                final responseData = json.decode(response.body);
+                // Strukturnya sama seperti getNews
+                final List<dynamic> newsList = responseData['body']['data'];
+                return newsList.map((json) => NewsArticle.fromJson(json)).toList();
+            } else {
+                throw Exception('Gagal memuat berita saya. Status Code: ${response.statusCode}');
+            }
+        } catch (e) {
+            print("Error saat getMyNews: $e");
+            throw Exception('Failed to load my news');
+        }
+    }
 }

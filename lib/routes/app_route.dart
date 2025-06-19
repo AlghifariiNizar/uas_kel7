@@ -77,11 +77,6 @@ class AppRoute {
           pageBuilder: (context, state) => const MaterialPage(child: ExploreScreen()),
         ),
         GoRoute(
-          path: RouteNames.favorites,
-          name: RouteNames.favorites,
-          pageBuilder: (context, state) => const MaterialPage(child: FavoritesScreen()),
-        ),
-        GoRoute(
           path: RouteNames.profile,
           name: RouteNames.profile,
           pageBuilder: (context, state) => const MaterialPage(child: ProfileScreen()),

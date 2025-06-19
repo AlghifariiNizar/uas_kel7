@@ -4,6 +4,10 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:uas_kel7/routes/route_names.dart';
 import 'package:uas_kel7/services/auth_service.dart';
+import 'package:uas_kel7/views/crud_screen.dart';
+import 'package:uas_kel7/views/favorite_screen.dart';
+import 'package:uas_kel7/views/home_screen.dart';
+import 'package:uas_kel7/views/login_screen.dart';
 import 'package:uas_kel7/views/splash_screen.dart';
 import 'package:uas_kel7/models/user.dart';
 
@@ -30,13 +34,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
     switch (index) {
       case 0:
-        context.goNamed(RouteNames.home);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
         break;
       case 1:
         context.goNamed(RouteNames.explore);
         break;
       case 2:
-        context.goNamed(RouteNames.favorites);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => FavoritesScreen()),
+        );
         break;
       case 3:
         // Sudah di halaman Profile
@@ -46,8 +56,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void _handleEditProfile() {
     print('Edit Profile tapped');
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Edit Profile tapped (Placeholder)')),
+    // ScaffoldMessenger.of(context).showSnackBar(
+    //   const SnackBar(content: Text('Edit Profile tapped (Placeholder)')),
+    // );
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const CrudScreen()),
     );
     // Navigasi ke halaman edit profil
     // context.goNamed(RouteNames.editProfile);
@@ -74,10 +88,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void _handleLogOut() async {
     // Panggil metode logout dari AuthService
     await Provider.of<AuthService>(context, listen: false).logout();
-    // Navigasi akan di-handle oleh redirect di go_router.
-    // Memanggil goNamed di sini bisa memastikan transisi yang lebih mulus.
-    if(mounted){
-       context.goNamed(RouteNames.login);
+    if (mounted) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => SplashScreen()),
+      );
     }
   }
 
@@ -94,12 +109,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
         side: BorderSide(color: Colors.grey[200]!, width: 0.5),
       ),
       child: ListTile(
-        leading: Icon(icon, color: const Color.fromARGB(255, 47, 12, 243), size: 22.sp),
+        leading: Icon(
+          icon,
+          color: const Color.fromARGB(255, 47, 12, 243),
+          size: 22.sp,
+        ),
         title: Text(
           title,
           style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w500),
         ),
-        trailing: Icon(Icons.arrow_forward_ios, size: 16.sp, color: Colors.grey[600]),
+        trailing: Icon(
+          Icons.arrow_forward_ios,
+          size: 16.sp,
+          color: Colors.grey[600],
+        ),
         onTap: onTap,
         contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
       ),
@@ -138,18 +161,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   borderRadius: BorderRadius.circular(16.r),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color.fromARGB(255, 47, 12, 243).withOpacity(0.3),
+                      color: const Color.fromARGB(
+                        255,
+                        47,
+                        12,
+                        243,
+                      ).withOpacity(0.3),
                       blurRadius: 10,
                       offset: const Offset(0, 4),
-                    )
-                  ]
+                    ),
+                  ],
                 ),
                 child: Row(
                   children: [
                     CircleAvatar(
                       radius: 30.r,
                       backgroundColor: Colors.white.withOpacity(0.8),
-                      child: Icon(Icons.person_outline, size: 35.sp, color: const Color.fromARGB(255, 47, 12, 243)),
+                      child: Icon(
+                        Icons.person_outline,
+                        size: 35.sp,
+                        color: const Color.fromARGB(255, 47, 12, 243),
+                      ),
                     ),
                     SizedBox(width: 16.w),
                     Expanded(
@@ -189,23 +221,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
                   _buildProfileOptionItem(
                     icon: Icons.edit_outlined,
-                    title: 'Edit Profile',
+                    title: 'Berita Saya',
                     onTap: _handleEditProfile,
-                  ),
-                  _buildProfileOptionItem(
-                    icon: Icons.lock_outline,
-                    title: 'Edit Password',
-                    onTap: _handleEditPassword,
-                  ),
-                  _buildProfileOptionItem(
-                    icon: Icons.history_outlined,
-                    title: 'History',
-                    onTap: _handleHistory,
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 24.h),
 
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.w),

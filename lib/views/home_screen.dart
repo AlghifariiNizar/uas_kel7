@@ -8,7 +8,11 @@ import 'package:uas_kel7/models/news_article.dart';
 import 'package:uas_kel7/routes/route_names.dart';
 import 'package:uas_kel7/services/api_service.dart';
 import 'package:uas_kel7/services/auth_service.dart';
+import 'package:uas_kel7/services/bookmark_service.dart';
+import 'package:uas_kel7/services/news_service.dart';
 import 'package:uas_kel7/views/article_detail_screen.dart';
+import 'package:uas_kel7/views/favorite_screen.dart';
+import 'package:uas_kel7/views/profile_screen.dart';
 import '../models/article_model.dart';
 import '../data/article_data.dart';
 import '../services/favorite_service.dart';
@@ -25,19 +29,20 @@ class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0; // Untuk BottomNavigationBar
   final FavoriteService _favoriteService = FavoriteService();
 
-  late Future<List<NewsArticle>> _newsFuture;
+  // late Future<List<NewsArticle>> _newsFuture;
+  // List<NewsArticle> _newsList = [];
 
   @override
   void initState() {
     super.initState();
-    _favoriteService.addListener(_onFavoritesChanged);
-    _loadNews();
-  }
-
-  void _loadNews() {
-    final token = Provider.of<AuthService>(context, listen: false).token;
-    _newsFuture = ApiService(token).getNews();
-    setState(() {});
+    // _favoriteService.addListener(_onFavoritesChanged);
+    // _loadNews();
+    // Provider.of<BookmarkService>(context, listen: false).loadBookmarks();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final token = Provider.of<AuthService>(context, listen: false).token;
+      Provider.of<NewsService>(context, listen: false).fetchAllNews(token);
+      Provider.of<BookmarkService>(context, listen: false).loadBookmarks();
+    });
   }
 
   @override
@@ -87,10 +92,15 @@ class _HomeScreenState extends State<HomeScreen> {
         context.goNamed(RouteNames.explore);
         break;
       case 2:
-        context.goNamed(RouteNames.favorites);
+        // context.goNamed(RouteNames.favorites);
+        Navigator.of(
+          context,
+        ).push(MaterialPageRoute(builder: (context) => FavoritesScreen()));
         break;
       case 3:
-        context.goNamed(RouteNames.profile);
+        Navigator.of(
+          context,
+        ).push(MaterialPageRoute(builder: (context) => ProfileScreen()));
         break;
     }
   }
@@ -183,20 +193,25 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      body: FutureBuilder<List<NewsArticle>>(
-        future: _newsFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('Tidak ada berita.'));
+      body: Consumer<NewsService>(
+        builder: (context, newsService, child) {
+          if (newsService.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (newsService.allNews.isEmpty) {
+            return const Center(
+              child: Text('Tidak ada berita yang ditemukan.'),
+            );
           }
 
-          final newsList = snapshot.data!;
+          // Jika data ada, gunakan newsService.allNews
+          final newsList = newsService.allNews;
           return RefreshIndicator(
-            onRefresh: () async => _loadNews(),
+            onRefresh: () async {
+              final token =
+                  Provider.of<AuthService>(context, listen: false).token;
+              await newsService.fetchAllNews(token);
+            },
             child: ListView.builder(
               itemCount: newsList.length,
               padding: EdgeInsets.all(16.w),
@@ -290,6 +305,40 @@ class _HomeScreenState extends State<HomeScreen> {
                                         color: Colors.grey[600],
                                       ),
                                     ),
+                                    Consumer<BookmarkService>(
+                                      builder:
+                                          (
+                                            ctx,
+                                            bookmarkService,
+                                            child,
+                                          ) => IconButton(
+                                            icon: Icon(
+                                              bookmarkService.isBookmarked(
+                                                    article.id!,
+                                                  )
+                                                  ? Icons.bookmark
+                                                  : Icons.bookmark_border,
+                                              color:
+                                                  bookmarkService.isBookmarked(
+                                                        article.id!,
+                                                      )
+                                                      ? const Color.fromARGB(
+                                                        255,
+                                                        47,
+                                                        12,
+                                                        243,
+                                                      )
+                                                      : Colors.grey,
+                                              size: 16.sp,
+                                            ),
+                                            onPressed: () {
+                                              bookmarkService.toggleBookmark(
+                                                article.id!,
+                                              );
+                                            },
+                                          ),
+                                    ),
+
                                     // IconButton(
                                     //   icon: Icon(
                                     //     _isFavorite(article.id)
@@ -326,7 +375,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => ArticleDetailScreen(article: article),
+                          builder:
+                              (context) =>
+                                  ArticleDetailScreen(article: article),
                         ),
                       );
                       // ScaffoldMessenger.of(context).showSnackBar(
@@ -421,6 +472,31 @@ class _HomeScreenState extends State<HomeScreen> {
                                 // ),
                               ],
                             ),
+                          ),
+                          Consumer<BookmarkService>(
+                            builder:
+                                (ctx, bookmarkService, child) => IconButton(
+                                  icon: Icon(
+                                    bookmarkService.isBookmarked(article.id!)
+                                        ? Icons.bookmark
+                                        : Icons.bookmark_border,
+                                    color:
+                                        bookmarkService.isBookmarked(
+                                              article.id!,
+                                            )
+                                            ? const Color.fromARGB(
+                                              255,
+                                              47,
+                                              12,
+                                              243,
+                                            )
+                                            : Colors.grey,
+                                    size: 16.sp,
+                                  ),
+                                  onPressed: () {
+                                    bookmarkService.toggleBookmark(article.id!);
+                                  },
+                                ),
                           ),
                           // IconButton(
                           //   icon: Icon(

@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:uas_kel7/routes/route_names.dart';
 import 'package:uas_kel7/services/auth_service.dart';
+import 'package:uas_kel7/views/home_screen.dart';
+import 'package:uas_kel7/views/intro_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -35,9 +37,15 @@ class _SplashScreenState extends State<SplashScreen> {
 
       if (mounted) {
         if (authService.isAuth) {
-          context.goNamed(RouteNames.home);
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => HomeScreen()),
+          );
         } else {
-          context.goNamed(RouteNames.intro);
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => IntroScreen()),
+          );
         }
       }
     }
@@ -47,9 +55,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(
-        child: Image.asset('assets/images/news1.jpeg', width: 123),
-      ),
+      body: Center(child: Image.asset('assets/images/news1.jpeg', width: 123)),
     );
   }
 }
