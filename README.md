@@ -1,5 +1,6 @@
 # uas_kel7
 
+Tema Aplikasi : Berita
 Judul : Beri Berita
 Anggota Kelompok 7:
 - Firza Much Asrizal N 2206008
