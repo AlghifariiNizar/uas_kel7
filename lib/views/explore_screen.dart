@@ -9,6 +9,7 @@ import 'package:uas_kel7/services/auth_service.dart';
 import 'package:uas_kel7/services/bookmark_service.dart';
 import 'package:uas_kel7/services/favorite_service.dart';
 import 'package:uas_kel7/services/news_service.dart';
+import 'package:uas_kel7/views/article_detail_screen.dart';
 import 'package:uas_kel7/views/favorite_screen.dart';
 import 'package:uas_kel7/views/home_screen.dart';
 import 'package:uas_kel7/views/profile_screen.dart';
@@ -301,14 +302,11 @@ class _ExploreScreenState extends State<ExploreScreen> {
                           clipBehavior: Clip.antiAlias,
                           child: InkWell(
                             onTap: () {
-                              // Navigasi ke detail artikel
-                              // context.goNamed(RouteNames.articleDetail, params: {'id': article.id});
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    'Navigasi ke detail artikel: ${article.title}',
-                                  ),
-                                  duration: const Duration(seconds: 1),
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder:
+                                      (context) =>
+                                          ArticleDetailScreen(article: article),
                                 ),
                               );
                             },
@@ -523,16 +521,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: () {
-          // Navigasi ke detail artikel
-          // context.goNamed(RouteNames.articleDetail, params: {'id': article.id});
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Navigasi ke detail artikel: ${article.title}'),
-              duration: const Duration(seconds: 1),
-            ),
-          );
-        },
+        onTap: () {},
         child: Padding(
           padding: EdgeInsets.all(10.w),
           child: Row(

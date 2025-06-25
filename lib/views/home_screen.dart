@@ -139,7 +139,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Row(
             children: [
               Container(
-                width: 80.w,
+                width: 60.w,
                 height: 40.h,
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(255, 47, 12, 243),
@@ -147,9 +147,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 child: Center(
                   child: Image.asset(
-                    'assets/images/logo.jpg',
-                    width: 80.w,
-                    height: 40.h,
+                    'assets/images/logo1.png',
+                    width: 30.w,
+                    height: 30.h,
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
@@ -261,7 +261,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Image.network(
-                              '$article.featuredImageUrl!',
+                              '$article.featuredImageUrl',
                               width: double.infinity,
                               height: 200.h,
                               fit: BoxFit.cover,

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:uas_kel7/models/news_article.dart';
 import 'package:uas_kel7/routes/route_names.dart';
 import 'package:uas_kel7/services/bookmark_service.dart';
+import 'package:uas_kel7/views/article_detail_screen.dart';
 import 'package:uas_kel7/views/explore_screen.dart';
 import 'package:uas_kel7/views/home_screen.dart';
 import 'package:uas_kel7/views/profile_screen.dart';
@@ -90,12 +91,12 @@ class FavoritesScreen extends StatelessWidget {
                             clipBehavior: Clip.antiAlias,
                             child: InkWell(
                               onTap: () {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      'Navigasi ke detail artikel: ${article.title}',
-                                    ),
-                                    duration: const Duration(seconds: 1),
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder:
+                                        (context) => ArticleDetailScreen(
+                                          article: article,
+                                        ),
                                   ),
                                 );
                               },
